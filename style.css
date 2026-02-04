@@ -19,7 +19,7 @@ body {
     align-items: center;
     padding: 20px;
     position: relative;
-    overflow-x: hidden; /* Fixes horizontal scroll on mobile */
+    overflow-x: hidden; 
 }
 
 /* Force Hidden Utility */
@@ -60,10 +60,10 @@ body {
     padding: 0 10px;
 }
 
-/* --- Vertical Layout (Input Upar, Button Niche) --- */
+/* --- Vertical Layout --- */
 .search-box { 
     display: flex; 
-    flex-direction: column; /* Stack vertically */
+    flex-direction: column; 
     gap: 20px; 
     align-items: center; 
 }
@@ -75,13 +75,13 @@ body {
     background: var(--glass-bg); 
     backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border); 
-    border-radius: 50px; /* Pill Shape */
+    border-radius: 50px; 
     color: var(--text-primary);
     font-size: 1.1rem; 
     font-family: 'Outfit', sans-serif; 
     outline: none; 
     transition: all 0.3s ease;
-    text-align: center; /* Typing center se shuru hogi */
+    text-align: center; 
 }
 .search-input:focus { border-color: var(--accent-color); box-shadow: 0 0 30px rgba(29, 185, 84, 0.2); }
 
@@ -183,38 +183,31 @@ body {
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-/* === FIX: Mobile Responsive & Layout Fixes === */
+/* === MOBILE RESPONSIVE FIX (FORCE SMALL BOXES) === */
 @media (max-width: 640px) {
-    /* Prevent side scrolling & centering issues */
     body {
         padding: 10px;
         align-items: flex-start;
         overflow-x: hidden; 
     }
 
-    .brand-title { font-size: 2.8rem; }
+    .brand-title { font-size: 2.5rem !important; margin-bottom: 20px; }
     
-    /* Ensure containers fit screen */
-    .search-home, .lyrics-viewer {
-        width: 100%;
-        max-width: 100%;
+    /* Force 2 Columns with small gap */
+    .results-container { 
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px; 
     }
 
-    .header { flex-direction: column; align-items: center; text-align: center; }
-    
-    /* Shrink padding for small screens */
-    .glass-card {
-        padding: 20px !important;
-    }
+    /* Small Cards */
+    .result-card { padding: 10px !important; }
+    .result-card h3 { font-size: 0.9rem !important; }
 
-    /* Wrap text properly */
-    .lyrics-content { 
-        font-size: 1rem !important; 
-        text-align: center;
-        word-wrap: break-word; 
-    }
+    /* Compact Search */
+    .search-input { padding: 12px 20px !important; font-size: 1rem; }
+    .search-btn { padding: 12px 0 !important; max-width: 150px; }
     
-    .results-container { grid-template-columns: repeat(2, 1fr); gap: 15px; }
-    
-    .song-title { font-size: 1.6rem !important; }
+    .glass-card { padding: 20px !important; }
+    .album-art { width: 120px !important; height: 120px !important; }
+    .lyrics-content { font-size: 1rem !important; text-align: center; word-wrap: break-word; }
 }
