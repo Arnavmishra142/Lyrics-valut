@@ -39,7 +39,7 @@ body {
 /* View 1: Search Home */
 .search-home { width: 100%; max-width: 700px; display: flex; flex-direction: column; align-items: center; animation: fadeIn 0.6s ease-out; }
 
-/* --- UPDATED: Title Thoda Chota aur Pass --- */
+/* --- Title Styling --- */
 .brand-title {
     font-size: 3.5rem; 
     font-weight: 800; 
@@ -52,7 +52,7 @@ body {
     -webkit-text-fill-color: transparent;
 }
 
-/* --- UPDATED: Container width fix --- */
+/* --- Container width fix --- */
 .search-container { 
     width: 100%; 
     max-width: 400px; 
@@ -60,7 +60,7 @@ body {
     padding: 0 10px;
 }
 
-/* --- UPDATED: Vertical Layout (Input Upar, Button Niche) --- */
+/* --- Vertical Layout (Input Upar, Button Niche) --- */
 .search-box { 
     display: flex; 
     flex-direction: column; /* Stack vertically */
@@ -68,7 +68,7 @@ body {
     align-items: center; 
 }
 
-/* --- UPDATED: Pill Shape Input --- */
+/* --- Pill Shape Input --- */
 .search-input {
     width: 100%; 
     padding: 18px 24px; 
@@ -85,7 +85,7 @@ body {
 }
 .search-input:focus { border-color: var(--accent-color); box-shadow: 0 0 30px rgba(29, 185, 84, 0.2); }
 
-/* --- UPDATED: Center Button --- */
+/* --- Center Button --- */
 .search-btn {
     width: 100%;
     max-width: 180px;
