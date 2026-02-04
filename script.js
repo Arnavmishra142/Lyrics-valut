@@ -4,7 +4,7 @@
  * Features: Dynamic SEO, URL Routing, Image in URL, Copy Tool
  */
 
-const API_KEY = 'f273bac7c8msh2aa7a560484e824p115ce5jsn1087c9cd67e0';
+const API_KEY = '1ca82b10a8mshe515379d002b721p1a6bddjsn7f8e50ca3ec7';
 const API_HOST = 'genius-song-lyrics1.p.rapidapi.com';
 
 const searchInput = document.getElementById('searchInput');
