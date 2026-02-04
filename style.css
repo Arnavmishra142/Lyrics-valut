@@ -39,26 +39,72 @@ body {
 /* View 1: Search Home */
 .search-home { width: 100%; max-width: 700px; display: flex; flex-direction: column; align-items: center; animation: fadeIn 0.6s ease-out; }
 
+/* --- UPDATED: Title Thoda Chota aur Pass --- */
 .brand-title {
-    font-size: 4rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.04em; margin-bottom: 40px; text-align: center;
-    background: linear-gradient(135deg, #fff 0%, var(--accent-color) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    font-size: 3.5rem; 
+    font-weight: 800; 
+    color: var(--text-primary); 
+    letter-spacing: -0.04em; 
+    margin-bottom: 30px; 
+    text-align: center;
+    background: linear-gradient(135deg, #fff 0%, var(--accent-color) 100%); 
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent;
 }
 
-.search-container { width: 100%; max-width: 500px; margin-bottom: 40px; }
-.search-box { display: flex; gap: 12px; margin-bottom: 20px; }
+/* --- UPDATED: Container width fix --- */
+.search-container { 
+    width: 100%; 
+    max-width: 400px; 
+    margin-bottom: 40px; 
+    padding: 0 10px;
+}
 
+/* --- UPDATED: Vertical Layout (Input Upar, Button Niche) --- */
+.search-box { 
+    display: flex; 
+    flex-direction: column; /* Stack vertically */
+    gap: 20px; 
+    align-items: center; 
+}
+
+/* --- UPDATED: Pill Shape Input --- */
 .search-input {
-    flex: 1; padding: 18px 24px; background: var(--glass-bg); backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border); border-radius: 16px; color: var(--text-primary);
-    font-size: 1.1rem; font-family: 'Outfit', sans-serif; outline: none; transition: all 0.3s ease;
+    width: 100%; 
+    padding: 18px 24px; 
+    background: var(--glass-bg); 
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border); 
+    border-radius: 50px; /* Pill Shape */
+    color: var(--text-primary);
+    font-size: 1.1rem; 
+    font-family: 'Outfit', sans-serif; 
+    outline: none; 
+    transition: all 0.3s ease;
+    text-align: center; /* Typing center se shuru hogi */
 }
 .search-input:focus { border-color: var(--accent-color); box-shadow: 0 0 30px rgba(29, 185, 84, 0.2); }
 
+/* --- UPDATED: Center Button --- */
 .search-btn {
-    padding: 18px 28px; background: var(--accent-color); border: none; border-radius: 16px; color: #000;
-    font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px;
+    width: 100%;
+    max-width: 180px;
+    padding: 16px 0; 
+    background: var(--accent-color); 
+    border: none; 
+    border-radius: 50px; 
+    color: #000;
+    font-size: 1rem; 
+    font-weight: 700; 
+    cursor: pointer; 
+    transition: all 0.3s ease; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(29, 185, 84, 0.3);
 }
-.search-btn:hover { transform: scale(1.05); box-shadow: 0 8px 24px rgba(29, 185, 84, 0.4); }
+.search-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(29, 185, 84, 0.5); }
 .search-btn svg { width: 20px; height: 20px; }
 
 /* Results Grid */
@@ -101,7 +147,7 @@ body {
 .lyrics-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
 .lyrics-label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
 
-/* FIX 1: Music Icon Size Fixed */
+/* FIX: Music Icon Size Fixed */
 .lyrics-icon {
     width: 24px !important;
     height: 24px !important;
@@ -137,7 +183,7 @@ body {
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-/* === FIX 2 & 3: Mobile Responsive & Layout Fixes === */
+/* === FIX: Mobile Responsive & Layout Fixes === */
 @media (max-width: 640px) {
     /* Prevent side scrolling & centering issues */
     body {
@@ -161,11 +207,11 @@ body {
         padding: 20px !important;
     }
 
-    /* Wrap text properly so it doesn't push layout out */
+    /* Wrap text properly */
     .lyrics-content { 
         font-size: 1rem !important; 
         text-align: center;
-        word-wrap: break-word; /* Crucial for long words */
+        word-wrap: break-word; 
     }
     
     .results-container { grid-template-columns: repeat(2, 1fr); gap: 15px; }
