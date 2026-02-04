@@ -145,3 +145,5 @@ searchBtn.addEventListener('click', () => {
 searchInput.addEventListener('keypress', (e) => {
     if(e.key === 'Enter') searchSongs(searchInput.value.trim());
 });
+// SCRIPT.JS KE SABSE NEECHE YE LINE ADD KAR DE:
+document.getElementById('backBtn').addEventListener('click', goBack);
