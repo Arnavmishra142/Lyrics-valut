@@ -1,7 +1,7 @@
 /**
  * ALFAAZ - ENGINE
  * Powered by Genius Lyrics API via RapidAPI
- * Updated with Dynamic SEO Logic
+ * Updated with Dynamic SEO & URL Logic
  */
 
 const API_KEY = 'f273bac7c8msh2aa7a560484e824p115ce5jsn1087c9cd67e0';
@@ -15,7 +15,7 @@ const resultsContainer = document.getElementById('resultsContainer');
 const lyricsViewer = document.getElementById('lyricsViewer');
 const loadingSpinner = document.getElementById('loadingSpinner');
 
-// === SEO FUNCTIONS (NEW ADDITION) ===
+// === SEO FUNCTIONS ===
 function updateSEO(songTitle, artistName, albumArt) {
     // 1. Change Browser Tab Title
     document.title = `${songTitle} Lyrics - ${artistName} | Alfaaz`;
@@ -63,7 +63,6 @@ async function searchSongs(query) {
         
         loadingSpinner.style.display = 'none';
 
-        // Check if hits exist (Genius API returns data.hits)
         if (data.hits && data.hits.length > 0) {
             displayResults(data.hits);
         } else {
@@ -81,7 +80,7 @@ async function searchSongs(query) {
 function displayResults(hits) {
     resultsContainer.innerHTML = hits.map(hit => {
         const song = hit.result;
-        // Escape single quotes in title/artist to prevent JS errors
+        // Escape single quotes
         const safeTitle = song.title_with_featured.replace(/'/g, "\\'");
         const safeArtist = song.primary_artist.name.replace(/'/g, "\\'");
 
@@ -95,21 +94,22 @@ function displayResults(hits) {
     }).join('');
 }
 
-// === FETCH LYRICS (THE MAIN EVENT) ===
+// === FETCH LYRICS (CLICKED FROM SEARCH) ===
 async function fetchLyrics(id, title, artist, imgUrl) {
-    // 1. Switch View immediately
+    // 1. Switch View
     searchHome.classList.add('hidden');
     lyricsViewer.classList.remove('hidden');
     
-    // 2. Set basic details (Show loading for lyrics)
+    // 2. Set details
     document.getElementById('songTitle').textContent = title;
     document.getElementById('artistName').textContent = artist;
     document.getElementById('albumArt').src = imgUrl;
     document.getElementById('bgImage').style.backgroundImage = `url('${imgUrl}')`;
-    
     document.getElementById('lyricsContent').textContent = "Unlocking Alfaaz... extracting lyrics...";
     
-    // === TRIGGER SEO UPDATE ===
+    // === UPDATE URL & SEO (NEW ADDITION) ===
+    const slug = `${title}-${artist}`.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    window.history.pushState({id: id, title: title, artist: artist, imgUrl: imgUrl}, "", ?song=${slug}&id=${id});
     updateSEO(title, artist, imgUrl);
 
     // 3. Call API
@@ -150,7 +150,8 @@ function goBack() {
     lyricsViewer.classList.add('hidden');
     searchHome.classList.remove('hidden');
     
-    // === RESET SEO ===
+    // === RESET URL & SEO ===
+    window.history.pushState({}, "", window.location.pathname);
     resetSEO();
 
     // Reset background
@@ -181,3 +182,54 @@ searchInput.addEventListener('keypress', (e) => {
 });
 
 document.getElementById('backBtn').addEventListener('click', goBack);
+
+// === HANDLE DIRECT LINKS (ON PAGE LOAD) ===
+// Ye code check karega ki kya user kisi shared link se aaya hai
+window.addEventListener('load', () => {
+    const params = new URLSearchParams(window.location.search);
+    const songId = params.get('id');
+    
+    if (songId) {
+        // Switch to lyrics view immediately
+        searchHome.classList.add('hidden');
+        lyricsViewer.classList.remove('hidden');
+        document.getElementById('lyricsContent').textContent = "Direct Link Detected! Fetching from Alfaaz...";
+        
+        // Fetch details using ID only
+        fetchLyricsByIdOnly(songId);
+    }
+});
+
+// Helper Function: Fetch everything using just ID (for direct links)
+async function fetchLyricsByIdOnly(id) {
+    try {
+        const url = `https://${API_HOST}/song/lyrics/?id=${id}`;
+        const options = { method: 'GET', headers: { 'x-rapidapi-key': API_KEY, 'x-rapidapi-host': API_HOST } };
+        
+        const response = await fetch(url, options);
+        const data = await response.json();
+        
+        if (data.lyrics && data.lyrics.tracking_data) {
+             const meta = data.lyrics.tracking_data;
+             
+             // Update UI with metadata from API
+             document.getElementById('songTitle').textContent = meta.title;
+             document.getElementById('artistName').textContent = meta.primary_artist;
+             
+             // Update SEO
+             updateSEO(meta.title, meta.primary_artist, "");
+
+             // Handle Lyrics
+             if (data.lyrics.lyrics && data.lyrics.lyrics.body.html) {
+                 const tempDiv = document.createElement("div");
+                 tempDiv.innerHTML = data.lyrics.lyrics.body.html;
+                 document.getElementById('lyricsContent').textContent = tempDiv.innerText;
+             } else {
+                 document.getElementById('lyricsContent').textContent = "Lyrics not found.";
+             }
+        }
+    } catch (e) {
+        console.error(e);
+        document.getElementById('lyricsContent').textContent = "Link expired or broken. Please search again.";
+    }
+}
