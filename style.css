@@ -19,9 +19,10 @@ body {
     align-items: center;
     padding: 20px;
     position: relative;
-    overflow-x: hidden;
+    overflow-x: hidden; /* Fixes horizontal scroll on mobile */
 }
 
+/* Force Hidden Utility */
 .hidden { display: none !important; }
 
 /* Background */
@@ -100,6 +101,15 @@ body {
 .lyrics-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
 .lyrics-label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
 
+/* FIX 1: Music Icon Size Fixed */
+.lyrics-icon {
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 24px;
+    opacity: 0.8;
+    color: var(--accent-color);
+}
+
 .lyrics-content {
     font-size: 1.2rem; line-height: 1.8; color: var(--text-primary); white-space: pre-wrap; font-weight: 400; font-family: 'Outfit', sans-serif;
 }
@@ -127,10 +137,38 @@ body {
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-/* Mobile */
+/* === FIX 2 & 3: Mobile Responsive & Layout Fixes === */
 @media (max-width: 640px) {
+    /* Prevent side scrolling & centering issues */
+    body {
+        padding: 10px;
+        align-items: flex-start;
+        overflow-x: hidden; 
+    }
+
     .brand-title { font-size: 2.8rem; }
+    
+    /* Ensure containers fit screen */
+    .search-home, .lyrics-viewer {
+        width: 100%;
+        max-width: 100%;
+    }
+
     .header { flex-direction: column; align-items: center; text-align: center; }
-    .lyrics-content { font-size: 1.1rem; text-align: center; }
+    
+    /* Shrink padding for small screens */
+    .glass-card {
+        padding: 20px !important;
+    }
+
+    /* Wrap text properly so it doesn't push layout out */
+    .lyrics-content { 
+        font-size: 1rem !important; 
+        text-align: center;
+        word-wrap: break-word; /* Crucial for long words */
+    }
+    
     .results-container { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+    
+    .song-title { font-size: 1.6rem !important; }
 }
