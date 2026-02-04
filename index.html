@@ -13,16 +13,21 @@
     <meta name="language" content="English">
 
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://alfaaz-lyrics.vercel.app/"> <meta property="og:title" content="Alfaaz - The Lyric Vault">
+    <meta property="og:url" content="https://alfaaz-lyrics.vercel.app/">
+    <meta property="og:title" content="Alfaaz - The Lyric Vault">
     <meta property="og:description" content="Stop searching for lyrics manually. Get aesthetic, copy-ready lyrics for your social media instantly.">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1200&q=80"> <meta property="twitter:card" content="summary_large_image">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1200&q=80">
+
+    <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://alfaaz-lyrics.vercel.app/">
     <meta property="twitter:title" content="Alfaaz - One Click Lyrics">
     <meta property="twitter:description" content="Instant lyrics copy tool for creators and music lovers.">
     <meta property="twitter:image" content="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1200&q=80">
 
-    <meta name="theme-color" content="#1db954"> <link rel="stylesheet" href="style.css">
+    <meta name="theme-color" content="#1db954">
+    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎵</text></svg>">
     
     <script type="application/ld+json">
     {
@@ -67,12 +72,44 @@
                     Search
                 </button>
             </div>
+            
+            <div style="margin-top: 25px; text-align: center;">
+                <a href="https://deal-hunter-arnav.vercel.app/" target="_blank" style="
+                    display: inline-block;
+                    padding: 12px 20px;
+                    background: rgba(255, 255, 255, 0.1);
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    border-radius: 12px;
+                    color: #FFD700;
+                    text-decoration: none;
+                    font-size: 0.9rem;
+                    font-weight: 600;
+                    backdrop-filter: blur(10px);
+                    transition: all 0.3s ease;
+                ">
+                    🎧 Getting Vibes? Check Best Headphones Deals Here!
+                </a>
+            </div>
         </div>
 
         <div class="results-container" id="resultsContainer">
-        </div>
+            </div>
         
         <div id="loadingSpinner" style="display:none; color:white; margin-top:20px;">Searching...</div>
+
+        <div style="margin-top: 60px; padding: 20px; opacity: 0.7; text-align: center;">
+            <h3 style="color: #fff; font-size: 1rem; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px;">Trending Now</h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">
+                <a href="?song=starboy-the-weeknd&id=3039923" style="color: #b3b3b3; text-decoration: none; font-size: 0.85rem;">Starboy Lyrics</a>
+                <span style="color: #444;">|</span>
+                <a href="?song=mockingbird-eminem&id=258" style="color: #b3b3b3; text-decoration: none; font-size: 0.85rem;">Mockingbird Lyrics</a>
+                <span style="color: #444;">|</span>
+                <a href="?song=krsna-i-guess&id=8636952" style="color: #b3b3b3; text-decoration: none; font-size: 0.85rem;">I Guess - Krsna</a>
+                <span style="color: #444;">|</span>
+                <a href="?song=apna-bana-le-arijit&id=8538136" style="color: #b3b3b3; text-decoration: none; font-size: 0.85rem;">Apna Bana Le</a>
+            </div>
+            <p style="margin-top: 30px; font-size: 0.75rem; color: #555;">&copy; 2024 Alfaaz. Lyrics powered by Genius.</p>
+        </div>
     </div>
 
     <div class="lyrics-viewer hidden" id="lyricsViewer">
@@ -91,8 +128,7 @@
                 <div class="song-info">
                     <h1 class="song-title" id="songTitle">Loading...</h1>
                     <p class="artist-name" id="artistName">Please wait</p>
-                    <div class="metadata-tags" id="metadataTags">
-                    </div>
+                    <div class="metadata-tags" id="metadataTags"></div>
                 </div>
             </div>
 
@@ -125,8 +161,6 @@
         Lyrics Copied!
     </div>
 
-    <script src="script.js"></script>
-    <script src="seo.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
