@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lyric Vault</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --accent-color: #1db954;
+            --accent-glow: rgba(29, 185, 84, 0.4);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --text-muted: #6a6a6a;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #0a0a0a;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Dynamic Blurred Background */
+        .bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-image {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150%;
+            height: 150%;
+            background-image: url('https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            filter: blur(80px) brightness(0.4);
+            animation: subtlePulse 20s ease-in-out infinite;
+            transition: background-image 0.5s ease;
+        }
+
+        @keyframes subtlePulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        /* ===== VIEW 1: SEARCH HOME ===== */
+        .search-home {
+            width: 100%;
+            max-width: 700px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .brand-title {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.04em;
+            margin-bottom: 40px;
+            text-align: center;
+            background: linear-gradient(135deg, #fff 0%, var(--accent-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 60px rgba(29, 185, 84, 0.3);
+        }
+
+        .search-container {
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 40px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 18px 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-family: 'Outfit', sans-serif;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 30px rgba(29, 185, 84, 0.2);
+        }
+
+        .search-btn {
+            padding: 18px 28px;
+            background: var(--accent-color);
+            border: none;
+            border-radius: 16px;
+            color: #000;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 24px rgba(29, 185, 84, 0.4);
+        }
+
+        .search-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Search Results */
+        .results-container {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+            padding: 0 10px;
+        }
+
+        .result-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .result-card img {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 12px;
+            object-fit: cover;
+            margin-bottom: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .result-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .result-card p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .no-results {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1rem;
+            padding: 40px;
+            grid-column: 1 / -1;
+        }
+
+        /* ===== VIEW 2: LYRICS VIEWER ===== */
+        .lyrics-viewer {
+            width: 100%;
+            max-width: 600px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-weight: 500;
+            font-family: 'Outfit', sans-serif;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(-3px);
+        }
+
+        .back-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        }
+
+        /* Header Section */
+        .header {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 32px;
+            align-items: flex-start;
+        }
+
+        .album-art-container {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .album-art {
+            width: 160px;
+            height: 160px;
+            border-radius: 12px;
+            object-fit: cover;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .album-art-container:hover .album-art {
+            transform: scale(1.02);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Play Button Overlay */
+        .play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 56px;
+            height: 56px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(29, 185, 84, 0.4);
+        }
+
+        .play-overlay:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 12px 32px rgba(29, 185, 84, 0.5);
+        }
+
+        .album-art-container:hover .play-overlay {
+            opacity: 1;
+        }
+
+        .play-icon {
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 10px 0 10px 18px;
+            border-color: transparent transparent transparent #000;
+            margin-left: 4px;
+        }
+
+        .pause-icon {
+            display: none;
+            width: 16px;
+            height: 20px;
+            position: relative;
+        }
+
+        .pause-icon::before,
+        .pause-icon::after {
+            content: '';
+            position: absolute;
+            width: 5px;
+            height: 100%;
+            background: #000;
+            border-radius: 1px;
+        }
+
+        .pause-icon::before { left: 0; }
+        .pause-icon::after { right: 0; }
+
+        .play-overlay.playing .play-icon { display: none; }
+        .play-overlay.playing .pause-icon { display: block; }
+
+        /* Song Info */
+        .song-info {
+            flex: 1;
+            padding-top: 8px;
+        }
+
+        .song-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            margin-bottom: 8px;
+        }
+
+        .artist-name {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        /* Metadata Tags */
+        .metadata-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 6px 14px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            margin: 24px 0;
+        }
+
+        /* Lyrics Section */
+        .lyrics-section {
+            position: relative;
+        }
+
+        .lyrics-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .lyrics-icon {
+            width: 20px;
+            height: 20px;
+            opacity: 0.6;
+        }
+
+        .lyrics-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .lyrics-content {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: var(--text-primary);
+            white-space: pre-wrap;
+            font-weight: 400;
+            padding-right: 10px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .lyrics-content::selection {
+            background: var(--accent-color);
+            color: #000;
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--accent-color);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                0 8px 24px rgba(29, 185, 84, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .fab:hover {
+            transform: scale(1.1) translateY(-2px);
+            box-shadow: 
+                0 12px 32px var(--accent-glow),
+                0 0 40px var(--accent-glow),
+                0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+        }
+
+        .fab:active {
+            transform: scale(0.95);
+        }
+
+        .fab svg {
+            width: 24px;
+            height: 24px;
+            fill: #000;
+        }
+
+        .fab-tooltip {
+            position: absolute;
+            right: 70px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .fab:hover .fab-tooltip {
+            opacity: 1;
+            transform: translateX(-10px);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 110px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.9);
+            color: var(--accent-color);
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateX(150%);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 101;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(29, 185, 84, 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast-icon {
+            width: 20px;
+            height: 20px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toast-icon::after {
+            content: '✓';
+            color: #000;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .brand-title {
+                font-size: 2.8rem;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+
+            .search-btn {
+                justify-content: center;
+            }
+
+            .results-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .glass-card {
+                padding: 24px;
+                border-radius: 20px;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .album-art {
+                width: 200px;
+                height: 200px;
+            }
+
+            .song-title {
+                font-size: 1.6rem;
+            }
+
+            .metadata-tags {
+                justify-content: center;
+            }
+
+            .lyrics-content {
+                font-size: 1.1rem;
+                text-align: center;
+            }
+
+            .fab {
+                bottom: 20px;
+                right: 20px;
+                width: 56px;
+                height: 56px;
+            }
+
+            .toast {
+                right: 20px;
+                bottom: 90px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Dynamic Background -->
+    <div class="bg-container">
+        <div class="bg-image" id="bgImage"></div>
+    </div>
+
+    <!-- ===== VIEW 1: SEARCH HOME ===== -->
+    <div class="search-home" id="searchHome">
+        <h1 class="brand-title">LYRIC VAULT</h1>
+        
+        <div class="search-container">
+            <div class="search-box">
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    id="searchInput" 
+                    placeholder="Type song name..." 
+                    autocomplete="off"
+                >
+                <button class="search-btn" onclick="performSearch()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    Search
+                </button>
+            </div>
+        </div>
+
+        <div class="results-container" id="resultsContainer">
+            <!-- Results will be injected here -->
+        </div>
+    </div>
+
+    <!-- ===== VIEW 2: LYRICS VIEWER ===== -->
+    <div class="lyrics-viewer hidden" id="lyricsViewer">
+        <button class="back-btn" onclick="goBack()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M19 12H5M12 19l-7-7 7-7"></path>
+            </svg>
+            Back to Search
+        </button>
+
+        <div class="glass-card">
+            <!-- Header Section -->
+            <div class="header">
+                <div class="album-art-container">
+                    <img 
+                        src="" 
+                        alt="Album Art" 
+                        class="album-art"
+                        id="albumArt"
+                    >
+                    <div class="play-overlay" id="playBtn" onclick="togglePlay()">
+                        <div class="play-icon"></div>
+                        <div class="pause-icon"></div>
+                    </div>
+                </div>
+                <div class="song-info">
+                    <h1 class="song-title" id="songTitle">Starboy</h1>
+                    <p class="artist-name" id="artistName">The Weeknd</p>
+                    <div class="metadata-tags" id="metadataTags">
+                        <span class="tag">2016</span>
+                        <span class="tag">R&B</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Lyrics Section -->
+            <div class="lyrics-section">
+                <div class="lyrics-header">
+                    <svg class="lyrics-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 18V5l12-2v13"></path>
+                        <circle cx="6" cy="18" r="3"></circle>
+                        <circle cx="18" cy="16" r="3"></circle>
+                    </svg>
+                    <span class="lyrics-label">Lyrics</span>
+                </div>
+                <pre class="lyri
