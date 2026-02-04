@@ -1,13 +1,12 @@
 /**
  * ALFAAZ - ENGINE
  * Powered by Genius Lyrics API via RapidAPI
- * Features: Dynamic SEO, URL Routing, Copy Tool
+ * Features: Dynamic SEO, URL Routing, Image in URL, Copy Tool
  */
 
 const API_KEY = 'f273bac7c8msh2aa7a560484e824p115ce5jsn1087c9cd67e0';
 const API_HOST = 'genius-song-lyrics1.p.rapidapi.com';
 
-// DOM Elements
 const searchInput = document.getElementById('searchInput');
 const searchBtn = document.getElementById('searchBtn');
 const searchHome = document.getElementById('searchHome');
@@ -17,15 +16,12 @@ const loadingSpinner = document.getElementById('loadingSpinner');
 
 // === SEO FUNCTIONS ===
 function updateSEO(songTitle, artistName, albumArt) {
-    // 1. Change Browser Tab Title
     document.title = `${songTitle} Lyrics - ${artistName} | Alfaaz`;
 
-    // 2. Change Description for Google
     const desc = `Read and copy lyrics of ${songTitle} by ${artistName}. Get aesthetic text format for Instagram and WhatsApp status via Alfaaz.`;
     const metaDesc = document.querySelector('meta[name="description"]');
     if(metaDesc) metaDesc.setAttribute("content", desc);
 
-    // 3. Change Link Preview (WhatsApp/Insta)
     const ogTitle = document.querySelector('meta[property="og:title"]');
     if(ogTitle) ogTitle.setAttribute("content", `🎵 ${songTitle} - ${artistName} Lyrics`);
 
@@ -34,7 +30,6 @@ function updateSEO(songTitle, artistName, albumArt) {
 }
 
 function resetSEO() {
-    // Reset to Default when going back
     document.title = "Alfaaz | Aesthetic Lyrics & One-Click Copy Tool";
     const metaDesc = document.querySelector('meta[name="description"]');
     if(metaDesc) metaDesc.setAttribute("content", "Find song lyrics in an aesthetic format. Copy full lyrics with one click.");
@@ -43,21 +38,11 @@ function resetSEO() {
 // === SEARCH FUNCTION ===
 async function searchSongs(query) {
     if(!query) return;
-    
-    // Clear old results & show loading
     resultsContainer.innerHTML = '';
     loadingSpinner.style.display = 'block';
-    
     try {
         const url = `https://${API_HOST}/search/?q=${encodeURIComponent(query)}&per_page=10&page=1`;
-        const options = {
-            method: 'GET',
-            headers: {
-                'x-rapidapi-key': API_KEY,
-                'x-rapidapi-host': API_HOST
-            }
-        };
-
+        const options = { method: 'GET', headers: { 'x-rapidapi-key': API_KEY, 'x-rapidapi-host': API_HOST } };
         const response = await fetch(url, options);
         const data = await response.json();
         
@@ -68,9 +53,7 @@ async function searchSongs(query) {
         } else {
             resultsContainer.innerHTML = '<div style="color:#aaa; grid-column:1/-1; text-align:center;">No songs found. Try a different name.</div>';
         }
-
     } catch (error) {
-        console.error("Search Error:", error);
         loadingSpinner.style.display = 'none';
         resultsContainer.innerHTML = '<div style="color:red; grid-column:1/-1; text-align:center;">Error connecting to Alfaaz. Check console.</div>';
     }
@@ -80,7 +63,6 @@ async function searchSongs(query) {
 function displayResults(hits) {
     resultsContainer.innerHTML = hits.map(hit => {
         const song = hit.result;
-        // Escape single quotes
         const safeTitle = song.title_with_featured.replace(/'/g, "\\'");
         const safeArtist = song.primary_artist.name.replace(/'/g, "\\'");
 
@@ -96,39 +78,28 @@ function displayResults(hits) {
 
 // === FETCH LYRICS (CLICKED FROM SEARCH) ===
 async function fetchLyrics(id, title, artist, imgUrl) {
-    // 1. Switch View
     searchHome.classList.add('hidden');
     lyricsViewer.classList.remove('hidden');
     
-    // 2. Set details
     document.getElementById('songTitle').textContent = title;
     document.getElementById('artistName').textContent = artist;
     document.getElementById('albumArt').src = imgUrl;
     document.getElementById('bgImage').style.backgroundImage = `url('${imgUrl}')`;
     document.getElementById('lyricsContent').textContent = "Unlocking Alfaaz... extracting lyrics...";
     
-    // === UPDATE URL & SEO ===
+    // === UPDATE URL & SEO (SAVES IMAGE NOW) ===
     const slug = `${title}-${artist}`.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-    window.history.pushState({id: id, title: title, artist: artist, imgUrl: imgUrl}, "", `?song=${slug}&id=${id}`);
+    window.history.pushState({id: id, title: title, artist: artist, imgUrl: imgUrl}, "", `?song=${slug}&id=${id}&img=${encodeURIComponent(imgUrl)}`);
     
     updateSEO(title, artist, imgUrl);
 
-    // 3. Call API
     try {
         const url = `https://${API_HOST}/song/lyrics/?id=${id}`;
-        const options = {
-            method: 'GET',
-            headers: {
-                'x-rapidapi-key': API_KEY,
-                'x-rapidapi-host': API_HOST
-            }
-        };
-
+        const options = { method: 'GET', headers: { 'x-rapidapi-key': API_KEY, 'x-rapidapi-host': API_HOST } };
         const response = await fetch(url, options);
         const data = await response.json();
         
         let lyricsText = "";
-        
         if (data.lyrics && data.lyrics.lyrics && data.lyrics.lyrics.body) {
              const tempDiv = document.createElement("div");
              tempDiv.innerHTML = data.lyrics.lyrics.body.html;
@@ -136,26 +107,18 @@ async function fetchLyrics(id, title, artist, imgUrl) {
         } else {
             lyricsText = "Lyrics restricted or not found in Alfaaz.";
         }
-
         document.getElementById('lyricsContent').textContent = lyricsText;
-
     } catch (error) {
-        console.error("Lyrics Error:", error);
         document.getElementById('lyricsContent').textContent = "Failed to load lyrics. Try again later.";
     }
 }
 
 // === UI LOGIC: COPY & NAV ===
-
 function goBack() {
     lyricsViewer.classList.add('hidden');
     searchHome.classList.remove('hidden');
-    
-    // === RESET URL & SEO ===
     window.history.pushState({}, "", window.location.pathname);
     resetSEO();
-
-    // Reset background
     document.getElementById('bgImage').style.backgroundImage = "url('https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=1200&q=80')";
 }
 
@@ -163,7 +126,6 @@ function copyLyrics() {
     const title = document.getElementById('songTitle').textContent;
     const artist = document.getElementById('artistName').textContent;
     const lyrics = document.getElementById('lyricsContent').textContent;
-    
     const formattedText = `🎧 ${title} - ${artist}\n\n${lyrics}\n\n(Copied from Alfaaz)`;
 
     navigator.clipboard.writeText(formattedText).then(() => {
@@ -173,53 +135,47 @@ function copyLyrics() {
     });
 }
 
-// Event Listeners
-searchBtn.addEventListener('click', () => {
-    searchSongs(searchInput.value.trim());
-});
-
-searchInput.addEventListener('keypress', (e) => {
-    if(e.key === 'Enter') searchSongs(searchInput.value.trim());
-});
-
+searchBtn.addEventListener('click', () => { searchSongs(searchInput.value.trim()); });
+searchInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') searchSongs(searchInput.value.trim()); });
 document.getElementById('backBtn').addEventListener('click', goBack);
 
-// === HANDLE DIRECT LINKS (ON PAGE LOAD) ===
+// === HANDLE DIRECT LINKS (WITH IMAGE FIX) ===
 window.addEventListener('load', () => {
     const params = new URLSearchParams(window.location.search);
     const songId = params.get('id');
+    const imgUrl = params.get('img'); // Get Image from URL
     
     if (songId) {
-        // Switch to lyrics view immediately
         searchHome.classList.add('hidden');
         lyricsViewer.classList.remove('hidden');
         document.getElementById('lyricsContent').textContent = "Direct Link Detected! Fetching from Alfaaz...";
         
-        // Fetch details using ID only
-        fetchLyricsByIdOnly(songId);
+        // Use Image if available in URL
+        if (imgUrl) {
+            document.getElementById('albumArt').src = imgUrl;
+            document.getElementById('bgImage').style.backgroundImage = `url('${imgUrl}')`;
+        } else {
+            document.getElementById('albumArt').src = 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&q=80';
+        }
+
+        fetchLyricsByIdOnly(songId, imgUrl);
     }
 });
 
-// Helper Function: Fetch everything using just ID (for direct links)
-async function fetchLyricsByIdOnly(id) {
+async function fetchLyricsByIdOnly(id, imgUrl) {
     try {
         const url = `https://${API_HOST}/song/lyrics/?id=${id}`;
         const options = { method: 'GET', headers: { 'x-rapidapi-key': API_KEY, 'x-rapidapi-host': API_HOST } };
-        
         const response = await fetch(url, options);
         const data = await response.json();
         
         if (data.lyrics && data.lyrics.tracking_data) {
              const meta = data.lyrics.tracking_data;
-             
-             // Update UI with metadata from API
              document.getElementById('songTitle').textContent = meta.title;
              document.getElementById('artistName').textContent = meta.primary_artist;
              
-             // Update SEO
-             updateSEO(meta.title, meta.primary_artist, "");
+             updateSEO(meta.title, meta.primary_artist, imgUrl || "");
 
-             // Handle Lyrics
              if (data.lyrics.lyrics && data.lyrics.lyrics.body.html) {
                  const tempDiv = document.createElement("div");
                  tempDiv.innerHTML = data.lyrics.lyrics.body.html;
@@ -229,7 +185,6 @@ async function fetchLyricsByIdOnly(id) {
              }
         }
     } catch (e) {
-        console.error(e);
         document.getElementById('lyricsContent').textContent = "Link expired or broken. Please search again.";
     }
 }
