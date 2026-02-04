@@ -1,5 +1,5 @@
 /**
- * LYRIC VAULT - ENGINE
+ * ALFAAZ - ENGINE
  * Powered by Genius Lyrics API via RapidAPI
  */
 
@@ -47,7 +47,8 @@ async function searchSongs(query) {
     } catch (error) {
         console.error("Search Error:", error);
         loadingSpinner.style.display = 'none';
-        resultsContainer.innerHTML = '<div style="color:red; grid-column:1/-1; text-align:center;">Error connecting to Vault. Check console.</div>';
+        // NAME CHANGED HERE
+        resultsContainer.innerHTML = '<div style="color:red; grid-column:1/-1; text-align:center;">Error connecting to Alfaaz. Check console.</div>';
     }
 }
 
@@ -76,7 +77,9 @@ async function fetchLyrics(id, title, artist, imgUrl) {
     document.getElementById('artistName').textContent = artist;
     document.getElementById('albumArt').src = imgUrl;
     document.getElementById('bgImage').style.backgroundImage = `url('${imgUrl}')`;
-    document.getElementById('lyricsContent').textContent = "Unlocking Vault... extracting lyrics...";
+    
+    // NAME CHANGED HERE
+    document.getElementById('lyricsContent').textContent = "Unlocking Alfaaz... extracting lyrics...";
     
     // 3. Call API
     try {
@@ -93,7 +96,6 @@ async function fetchLyrics(id, title, artist, imgUrl) {
         const data = await response.json();
         
         // Genius API sometimes returns HTML or plain text. Let's handle it.
-        // Usually data.lyrics.lyrics.body.html or plain
         let lyricsText = "";
         
         if (data.lyrics && data.lyrics.lyrics && data.lyrics.lyrics.body) {
@@ -102,7 +104,8 @@ async function fetchLyrics(id, title, artist, imgUrl) {
              tempDiv.innerHTML = data.lyrics.lyrics.body.html;
              lyricsText = tempDiv.innerText; // Removes HTML tags
         } else {
-            lyricsText = "Lyrics restricted or not found in Vault.";
+            // NAME CHANGED HERE
+            lyricsText = "Lyrics restricted or not found in Alfaaz.";
         }
 
         document.getElementById('lyricsContent').textContent = lyricsText;
@@ -127,8 +130,8 @@ function copyLyrics() {
     const artist = document.getElementById('artistName').textContent;
     const lyrics = document.getElementById('lyricsContent').textContent;
     
-    // Format for Instagram/WhatsApp
-    const formattedText = `🎧 ${title} - ${artist}\n\n${lyrics}\n\n(Copied from Lyric Vault)`;
+    // NAME CHANGED HERE (For Copy Output)
+    const formattedText = `🎧 ${title} - ${artist}\n\n${lyrics}\n\n(Copied from Alfaaz)`;
 
     navigator.clipboard.writeText(formattedText).then(() => {
         const toast = document.getElementById('toastMsg');
@@ -145,5 +148,5 @@ searchBtn.addEventListener('click', () => {
 searchInput.addEventListener('keypress', (e) => {
     if(e.key === 'Enter') searchSongs(searchInput.value.trim());
 });
-// SCRIPT.JS KE SABSE NEECHE YE LINE ADD KAR DE:
+
 document.getElementById('backBtn').addEventListener('click', goBack);
