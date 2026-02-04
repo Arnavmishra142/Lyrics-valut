@@ -1,7 +1,7 @@
 /**
  * ALFAAZ - ENGINE
  * Powered by Genius Lyrics API via RapidAPI
- * Updated with Dynamic SEO & URL Logic (FIXED)
+ * Features: Dynamic SEO, URL Routing, Copy Tool
  */
 
 const API_KEY = 'f273bac7c8msh2aa7a560484e824p115ce5jsn1087c9cd67e0';
@@ -107,9 +107,8 @@ async function fetchLyrics(id, title, artist, imgUrl) {
     document.getElementById('bgImage').style.backgroundImage = `url('${imgUrl}')`;
     document.getElementById('lyricsContent').textContent = "Unlocking Alfaaz... extracting lyrics...";
     
-    // === UPDATE URL & SEO (FIXED LINE) ===
+    // === UPDATE URL & SEO ===
     const slug = `${title}-${artist}`.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-    // Niche wali line fix kar di hai (backticks ` add kiye)
     window.history.pushState({id: id, title: title, artist: artist, imgUrl: imgUrl}, "", `?song=${slug}&id=${id}`);
     
     updateSEO(title, artist, imgUrl);
