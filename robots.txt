@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://alfaaz-lyrics.vercel.app/sitemap.xml
